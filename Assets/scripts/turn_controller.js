@@ -7,9 +7,8 @@ var multiplier: float;
 var storedpos = p;
 var ball: GameObject;
 var cue: GameObject;
-var menu: GameObject;
 var HasClicked: boolean = false;
-var menu_open: boolean = false;
+
 // Angular speed in radians per sec.
 var speed: float;
 
@@ -37,6 +36,12 @@ function OnGUI() {
 }
 
 function Update () {
+	if (rb.velocity.magnitude <= 0.1 && cue.activeSelf == false) {
+			cue.SetActive(true);
+			//cue.transform.position.x = -8.53;
+			//cue.transform.position.y = 0;
+	}
+
 	if(HasClicked !== true) {
 		var dir = p - rb.transform.position;
         // The step size is equal to speed times frame time.
@@ -46,35 +51,28 @@ function Update () {
 
 } else {
 	var length = Vector2.Dot((p - rb.transform.position).normalized, p-storedpos);
-	cue.transform.position.x = -8.53 - Mathf.Abs(length);
+	cue.transform.localPosition.x = -8.53 - Mathf.Abs(length);
+	//cue.transform.position = Vector2( , 1);
+	//Debug.Log(cue.transform.position.x);
 }
 	if(Input.GetMouseButtonDown(0)) {
 		//rb.velocity = Vector2(0,thrust);
+		if (rb.IsSleeping) {
 		storedpos = p;
 		HasClicked = true;
+		}
 	}
 	if(Input.GetMouseButtonUp(0)) {
+		if (HasClicked) {
 		length = Mathf.Abs(Vector2.Dot((p - rb.transform.position).normalized, p-storedpos));
 		Debug.Log(length);
 		rb.velocity = (storedpos - rb.transform.position).normalized * (length * multiplier);
+		cue.transform.localPosition.x = -8.53;
 		cue.SetActive(false);
+		HasClicked = false;
+		}
 	}
 
 	//menu stuff opend by esc key
-	if (Input.GetKeyDown ("escape")) {
-		if (menu_open) {
-			menu_open = false;
-			menu.SetActive(false);
-			if (!HasClicked) {
-				cue.SetActive(true);
-			}
-		} else {
-			menu_open = true;
-			menu.SetActive(true);
-			cue.SetActive(false);
-
-		}
-
-	}
 
 }
