@@ -65,14 +65,11 @@ function Update () {
 	if(Input.GetMouseButtonUp(0)) {
 		if (HasClicked) {
 		length = Mathf.Abs(Vector2.Dot((p - rb.transform.position).normalized, p-storedpos));
-		Debug.Log(length);
+		//Debug.Log(length);
 		rb.velocity = (storedpos - rb.transform.position).normalized * (length * multiplier);
 		cue.transform.localPosition.x = -8.53;
 		cue.SetActive(false);
 		HasClicked = false;
 		}
 	}
-
-	//menu stuff opend by esc key
-
 }

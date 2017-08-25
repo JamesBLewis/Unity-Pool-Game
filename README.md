@@ -3,9 +3,11 @@ A simple pool/billiards game I made in unity, written in javascript as a proof o
 
 ## Todo List
 In no particular order...
-* Add multiplayer
-* Port to browsers
-* Port to mobile devices
-* make it look pretty
-* conform to pool rules
-* balance physics
+* Add multiplayer.
+* Port to browsers.
+* Port to mobile devices.
+* make it look pretty.
+* conform to pool rules.
+* balance physics.
+* add icons and nice graphics.
+* add customization options.

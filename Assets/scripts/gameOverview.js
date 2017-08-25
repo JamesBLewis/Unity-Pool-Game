@@ -10,22 +10,29 @@ function Start () {
 
 function Update () {
 	if (ballType) {
-		Debug.Log(ballType);
-	}
-	if (Input.GetKeyDown ("escape")) {
-		if (menu_open) {
-			menu_open = false;
-			menu.SetActive(false);
-		} else {
-			menu_open = true;
-			menu.SetActive(true);
+		//Debug.Log(ballType);
 
-		}
+	}
+
+		//menu stuff opend by esc key
+
+	if (Input.GetKeyDown ("escape")) {
+		menuToggle();
 	}
 }
 
-function OnTurnStart () {
+function menuToggle() {
+	if (menu_open) {
+		menu_open = false;
+		menu.SetActive(false);
+	} else {
+		menu_open = true;
+		menu.SetActive(true);
+	}
+}
 
+function OnTurnStart (ballstate) {
+	Debug.Log("called OnTurnStart with "+ballstate);
 }
 
 function OnTurnEnd () {
