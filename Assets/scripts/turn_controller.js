@@ -8,12 +8,16 @@ var storedpos = p;
 var ball: GameObject;
 var cue: GameObject;
 var HasClicked: boolean = false;
-
+var ballsunk : int;
+var lastballsunk : int;
 // Angular speed in radians per sec.
 var speed: float;
 
 function Start () {
 	//Debug.Log("hello");
+	lastballsunk = GetComponent(gameOverview).currentPlayer.Count;
+	cue.SetActive(true);
+	
 }
 
 // Convert the 2D position of the mouse into a
@@ -37,7 +41,14 @@ function OnGUI() {
 
 function Update () {
 	if (rb.velocity.magnitude <= 0.1 && cue.activeSelf == false) {
-			cue.SetActive(true);
+		ballsunk = GetComponent(gameOverview).currentPlayer.Count - lastballsunk;
+		cue.SetActive(true);
+		if (ballsunk == 0) {
+			cue.SetActive(false);
+			GetComponent(gameOverview).EndTurn("noneSunk");
+		} else {
+		lastballsunk = GetComponent(gameOverview).currentPlayer.Count;
+	}
 			//cue.transform.position.x = -8.53;
 			//cue.transform.position.y = 0;
 	}
