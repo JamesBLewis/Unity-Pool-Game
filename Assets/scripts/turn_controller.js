@@ -12,12 +12,18 @@ var ballsunk : int;
 var lastballsunk : int;
 // Angular speed in radians per sec.
 var speed: float;
-
+private var turn : int;
 function Start () {
-	//Debug.Log("hello");
-	lastballsunk = GetComponent(gameOverview).currentPlayer.Count;
+	 turn = GetComponent(gameOverview).turn;
+	if (turn%2==1) {
+		lastballsunk = GetComponent(gameOverview).player1.Count;
+	} else if (turn%2==0) {
+		lastballsunk = GetComponent(gameOverview).player2.Count;
+	} else {
+		return "error";
+		Debug.Log("error current player not found");
+	}
 	cue.SetActive(true);
-	
 }
 
 // Convert the 2D position of the mouse into a
@@ -31,26 +37,31 @@ function OnGUI() {
 	mousePos.x = e.mousePosition.x;
 	mousePos.y = c.pixelHeight - e.mousePosition.y;
 	p = c.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, c.nearClipPlane));
-
-	GUILayout.BeginArea(new Rect(20, 20, 250, 120));
+ // mouse position debug readout
+	//GUILayout.BeginArea(new Rect(20, 20, 250, 120));
 	//GUILayout.Label("Screen pixels: " + c.pixelWidth + ":" + c.pixelHeight);
 	//GUILayout.Label("Mouse position: " + mousePos);
-	GUILayout.Label("World position: " + p.ToString("F3"));
-	GUILayout.EndArea();
+	//GUILayout.Label("World position: " + p.ToString("F3"));
+	//GUILayout.EndArea();
 }
 
 function Update () {
+	//if ball has stopped and the cue is inactive(not first turn)
 	if (rb.velocity.magnitude <= 0.1 && cue.activeSelf == false) {
-		ballsunk = GetComponent(gameOverview).currentPlayer.Count - lastballsunk;
-		cue.SetActive(true);
-		if (ballsunk == 0) {
+		if (turn%2==1) {
+			lastballsunk = GetComponent(gameOverview).player1.Count - lastballsunk;
+		} else if (turn%2==0) {
+			lastballsunk = GetComponent(gameOverview).player2.Count - lastballsunk;
+		} else {
+			return "error";
+			Debug.Log("error current player not found");
+		}
+
+		if (lastballsunk == 0) {
 			cue.SetActive(false);
 			GetComponent(gameOverview).EndTurn("noneSunk");
-		} else {
-		lastballsunk = GetComponent(gameOverview).currentPlayer.Count;
-	}
-			//cue.transform.position.x = -8.53;
-			//cue.transform.position.y = 0;
+		}
+	cue.SetActive(true);
 	}
 
 	if(HasClicked !== true) {

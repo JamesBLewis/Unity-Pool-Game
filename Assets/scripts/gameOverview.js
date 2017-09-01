@@ -1,7 +1,7 @@
 ﻿#pragma strict
 import System.Collections.Generic;
-var currentPlayer : List.<int> = new List.<int>();
-var otherPlayer : List.<int> = new List.<int>();
+var player1 : List.<int> = new List.<int>();
+var player2 : List.<int> = new List.<int>();
 var menu_open: boolean = false;
 var turn : int = 1;
 var cue: GameObject;
@@ -18,7 +18,6 @@ var firsthit: boolean = false;
 function Update () {
 
 		//menu stuff opend by esc key
-
 	if (Input.GetKeyDown ("escape")) {
 		menuToggle();
 	}
@@ -35,16 +34,24 @@ function menuToggle() {
 }
 
 function firstHit (id : int) {
-	if (turn == 1) {
-		Debug.Log("hit but was first turn");
-	} else {
-		if (currentPlayer[0] <= 7) {
-			if (id >= 9) {
-				Debug.Log("wrong ball type");
+	if (turn != 1 && turn != 2) {
+		if (turn%2==0) {
+			if (player2[0] <= 7) {
+				if (id >= 9) {
 				EndTurn("wrong");
-		} else if (currentPlayer[0] >= 9) {
-			if (id <= 7) {
-				Debug.Log("wrong ball type");
+				}
+			} else if (player2[0] >= 9) {
+				if (id <= 7) {
+				EndTurn("wrong");
+				}
+			}
+		} else if (turn%2==1) {
+			if (player1[0] <= 7) {
+				if (id >= 9) {
+				EndTurn("wrong");
+				}
+			} else if (player1[0] >= 9) {
+				if (id <= 7) {
 				EndTurn("wrong");
 				}
 			}
@@ -55,32 +62,40 @@ function firstHit (id : int) {
 function StartTurn (ballstate) {
 	//reset hasCollided on script
 	whiteball.GetComponent(BallScript).hascollided = false;
+	// becuase single player
 	GetComponent(turn_controller).enabled = true;
 	Debug.Log("now turn: "+turn);
 }
 
 function EndTurn (ballstate) {
 	GetComponent(turn_controller).enabled = false;
-	turn++;
-	Debug.Log(currentPlayer[0]);
-	if (currentPlayer[0]) {
-	if (currentPlayer[0] <= 7 && ballstate != "noneSunk") {
-		balltype = "Solids";
-	} else {
-		balltype = "Strips";
-	}
-}
-	var temp = currentPlayer;
-	currentPlayer = otherPlayer;
-	otherPlayer = temp;
-	savedState = ballstate;
-	StartTurn(ballstate);
-
 	if (turn%2==0) {
-		Debug.Log("turn is even player must be player 2");
-		PtwoText.GetComponent(UI.Text).text = "Player 1: "+balltype;
-	} else if (turn%2==1){
-		Debug.Log("turn is odd player must be player 1");
-		PoneText.GetComponent(UI.Text).text = "Player 2: "+balltype;
+		if (player2[0] <= 7 && ballstate != "noneSunk") {
+			balltype = "Solids";
+		} else if (ballstate != "noneSunk"){
+			balltype = "Strips";
+		}
+		Debug.Log("last turn was player 2");
+		PtwoText.GetComponent(UI.Text).text = "Player 2: "+balltype;
+	} else if (turn%2==1) {
+		if (player1[0] <= 7 && ballstate != "noneSunk") {
+			balltype = "Solids";
+		} else if (ballstate != "noneSunk"){
+			balltype = "Strips";
+		}
+		Debug.Log("last turn was player 1");
+		PoneText.GetComponent(UI.Text).text = "Player 1: "+balltype;
+	}
+	turn++;
+	StartTurn(ballstate);
+}
+
+function addPocketed(ball : int){
+	if (turn%2==1) {
+		player1.Add(ball);
+	} else if (turn%2==0) {
+		player2.Add(ball);
+	} else {
+		Debug.Log("error current player not found");
 	}
 }
