@@ -10,10 +10,7 @@ var whiteball: GameObject;
 var savedState: String;
 var PoneText: GameObject;
 var PtwoText: GameObject;
-var balltype : String;
-function Start () {
-var firsthit: boolean = false;
-}
+var balltype : String = "error";
 
 function Update () {
 
